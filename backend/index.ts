@@ -1,5 +1,5 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client"; // 👈 アダプターのインポートは消してこれだけに！
+import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 
 const app = express();
@@ -7,11 +7,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// PrismaClientを作る共通関数（めちゃくちゃスッキリします！）
+// 👇 ここを書き換えます！
 function getPrisma() {
-  return new PrismaClient();
+  return new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL, // 👈 Render上のDATABASE_URLを強制的に注入！
+      },
+    },
+  });
 }
-
 // ==========================================
 // ① 教室一覧を取得するAPI (GET)
 // ==========================================
