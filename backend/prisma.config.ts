@@ -1,7 +1,7 @@
-import { defineConfig } from "prisma/config";
+import { defineConfig } from "@prisma/config";
 
 export default defineConfig({
   datasource: {
-    url: "file:./prisma/dev.db",
+    url: process.env.DATABASE_URL, // 👈 接続先URLをここに引っ越し！
   },
 });

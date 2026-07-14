@@ -4,8 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql" // 👈 sqlite から変更
-  url      = env("DATABASE_URL") // 👈 環境変数から読み込むように変更
+  provider = "postgresql"
 }
 
 // 1. 学生情報
