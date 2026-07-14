@@ -51,13 +51,13 @@ function App() {
 
   useEffect(() => {
     // 教室データの取得
-    fetch("http://localhost:3000/api/classrooms")
+    fetch("https://campus-app-l5i8.onrender.com/api/classrooms")
       .then((res) => res.json())
       .then((data) => setClassrooms(data))
       .catch((err) => console.error(err));
 
     // 💡 本番用: バックエンドから講義データを取る場合（CORSが通れば動きます）
-    fetch("http://localhost:3000/api/courses")
+    fetch("https://campus-app-l5i8.onrender.com/api/courses")
       .then((res) => res.json())
       .then((data) => {
         if (data.length > 0) setCourses(data);
