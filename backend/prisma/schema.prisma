@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js" // js を戻す
+  // output の行は完全に削除！
+}
+
+datasource db {
+  provider = "postgresql" // 👈 sqlite から変更
+  url      = env("DATABASE_URL") // 👈 環境変数から読み込むように変更
+}
+
+// 1. 学生情報
+model User {
+  id          Int          @id @default(autoincrement())
+  studentId   String       @unique // 学籍番号
+  name        String       // 名前
+  enrollments Enrollment[] // 履修している講義のリスト
+  assignments Assignment[] // 自分の課題のリスト
+}
+
+// 2. 講義情報
+model Course {
+  id        Int    @id @default(autoincrement())
+  name      String // 講義名
+  teacher   String // 👈 ここが消えていませんか？
+  roomName  String // 👈 ここもチェック！
+  dayOfWeek String // 曜日
+  period    Int    // 時限
+
+  // 他のテーブルとの連携用（これも残す）
+  enrollments Enrollment[]
+  assignments Assignment[]
+}
+
+// 3. 中間テーブル (誰がどの講義を取っているか)
+model Enrollment {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  courseId Int
+  
+  // UserとCourseを紐づける設定
+  user     User   @relation(fields: [userId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id])
+
+  // 同じ学生が同じ講義を2回登録できないようにする制約
+  @@unique([userId, courseId])
+}
+
+// 4. 課題
+model Assignment {
+  id          Int      @id @default(autoincrement())
+  title       String   // 課題名
+  deadline    DateTime // 締切日時
+  isSubmitted Boolean  @default(false) // 提出済みかどうか（初期値は未提出）
+  
+  userId      Int      // 誰の課題か
+  courseId    Int      // どの講義の課題か
+  user        User     @relation(fields: [userId], references: [id])
+  course      Course   @relation(fields: [courseId], references: [id])
+}
+
+// 5. 教室
+model Classroom {
+  id            Int     @id @default(autoincrement())
+  name          String  @unique // 教室名 (例: "101教室")
+  capacity      Int     // サイズ（収容人数）
+  hasPc         Boolean @default(false) // PCの有無
+  allowsFood    Boolean @default(false) // 飲食可否
+  hasProjector  Boolean @default(false) // プロジェクターの有無
+  hasBlackboard Boolean @default(false) // 黒板の有無
+}
+
