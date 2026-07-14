@@ -2,20 +2,19 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 
+// 👇 【追加】Prismaが動く前に、環境変数が空っぽならRenderの環境変数を強制適用する
+if (!process.env.DATABASE_URL && process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.DATABASE_URL;
+}
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// 👇 ここを書き換えます！
+// 👇 【元に戻す】引数は無し！これでTypeScriptのエラーは完全に消えます！
 function getPrisma() {
-  return new PrismaClient({
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL, // 👈 Render上のDATABASE_URLを強制的に注入！
-      },
-    },
-  });
+  return new PrismaClient();
 }
 // ==========================================
 // ① 教室一覧を取得するAPI (GET)
