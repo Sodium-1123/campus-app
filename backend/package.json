@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "prisma generate && prisma db push && tsc",
+    "build": "prisma db push --force-reset && prisma generate && tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],
