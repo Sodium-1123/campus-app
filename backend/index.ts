@@ -1,11 +1,20 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+// 静的ファイル（Viteでビルドされたフロントエンド）の配信
+const frontendDist = path.resolve(process.cwd(), "../frontend/dist");
+app.use(express.static(frontendDist));
 
 // シンプルかつ型エラーが絶対に起きない形！
 function getPrisma() {
@@ -96,9 +105,14 @@ app.post("/api/import-courses", async (req, res) => {
   }
 });
 
-// トップページのルート (GET /)
-app.get("/", (req, res) => {
-  res.send("Campus App API Backend is running!");
+// トップページ / フロントエンド画面のルーティング
+app.get("*", (req, res, next) => {
+  if (req.path.startsWith("/api")) return next();
+  res.sendFile(path.join(frontendDist, "index.html"), (err) => {
+    if (err) {
+      res.send("Campus App API Backend is running!");
+    }
+  });
 });
 
 // サーバーを起動（Render環境変数 PORT に対応）

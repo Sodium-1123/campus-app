@@ -51,18 +51,18 @@ function App() {
 
   useEffect(() => {
     // 教室データの取得
-    fetch("https://campus-app-l5i8.onrender.com/api/classrooms")
+    fetch("/api/classrooms")
       .then((res) => res.json())
       .then((data) => setClassrooms(data))
       .catch((err) => console.error(err));
 
-    // 💡 本番用: バックエンドから講義データを取る場合（CORSが通れば動きます）
-    fetch("https://campus-app-l5i8.onrender.com/api/courses")
+    // 💡 本番用: バックエンドから講義データを取得
+    fetch("/api/courses")
       .then((res) => res.json())
       .then((data) => {
-        if (data.length > 0) setCourses(data);
+        if (Array.isArray(data) && data.length > 0) setCourses(data);
       })
-      .catch(() => console.log("講義APIはまだ仮データで動かしています"));
+      .catch(() => console.log("講義APIデータの取得に失敗しました"));
   }, []);
 
   // 💡 時間割の枠組みを定義
