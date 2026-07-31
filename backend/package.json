@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm --prefix ../frontend install && npm --prefix ../frontend run build && prisma db push --force-reset && prisma generate && tsc",
+    "build": "cd ../frontend && npm install && npm run build && cd ../backend && prisma db push --force-reset && prisma generate && tsc",
     "start": "node dist/index.js"
   },
   "keywords": [],
