@@ -105,8 +105,8 @@ app.post("/api/import-courses", async (req, res) => {
   }
 });
 
-// トップページ / フロントエンド画面のルーティング
-app.get("*", (req, res, next) => {
+// トップページ / フロントエンド画面のルーティング (Express 5 対応)
+app.use((req, res, next) => {
   if (req.path.startsWith("/api")) return next();
   res.sendFile(path.join(frontendDist, "index.html"), (err) => {
     if (err) {
