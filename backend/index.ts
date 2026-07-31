@@ -96,8 +96,13 @@ app.post("/api/import-courses", async (req, res) => {
   }
 });
 
-// サーバーをポート3000番で起動
-const PORT = 3000;
-app.listen(PORT, () => {
+// トップページのルート (GET /)
+app.get("/", (req, res) => {
+  res.send("Campus App API Backend is running!");
+});
+
+// サーバーを起動（Render環境変数 PORT に対応）
+const PORT = Number(process.env.PORT) || 3000;
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 サーバーが起動しました: http://localhost:${PORT}`);
 });
