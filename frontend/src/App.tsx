@@ -1,13 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import "./App.css";
-
-interface Classroom {
-  id: number;
-  name: string;
-  capacity: number;
-  hasPc: boolean;
-  allowsFood: boolean;
-}
 
 // 💡 講義データの型を定義
 interface Course {
@@ -20,8 +12,7 @@ interface Course {
 }
 
 function App() {
-  const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-  // 💡 講義データを管理するステート（最初は仮データを3つ入れておきます！）
+  // 💡 講義データを管理するステート（初期値は仮データ）
   const [courses, setCourses] = useState<Course[]>([
     {
       id: 1,
@@ -50,13 +41,7 @@ function App() {
   ]);
 
   useEffect(() => {
-    // 教室データの取得
-    fetch("/api/classrooms")
-      .then((res) => res.json())
-      .then((data) => setClassrooms(data))
-      .catch((err) => console.error(err));
-
-    // 💡 本番用: バックエンドから講義データを取得
+    // バックエンドから最新の講義データを取得
     fetch("/api/courses")
       .then((res) => res.json())
       .then((data) => {
@@ -125,7 +110,7 @@ function App() {
 
           {/* 時間割のメイン中身（時限ごとにループ） */}
           {periods.map((period) => (
-            <>
+            <Fragment key={period}>
               {/* 左端の時限表示（1限、2限...） */}
               <div
                 style={{
@@ -187,39 +172,7 @@ function App() {
                   </div>
                 );
               })}
-            </>
-          ))}
-        </div>
-      </section>
-
-      <hr />
-
-      {/* 🏫 教室一覧セクション */}
-      <section style={{ marginTop: "30px" }}>
-        <h2>登録済みの教室一覧</h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            gap: "15px",
-          }}
-        >
-          {classrooms.map((room) => (
-            <div
-              key={room.id}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                padding: "15px",
-                textAlign: "left",
-                backgroundColor: "#f9f9f9",
-              }}
-            >
-              <h3>{room.name}</h3>
-              <p>👤 収容人数: {room.capacity}名</p>
-              <p>{room.hasPc ? "💻 PCあり" : "❌ PCなし"}</p>
-              <p>{room.allowsFood ? "🍱 飲食可" : "🚭 飲食不可"}</p>
-            </div>
+            </Fragment>
           ))}
         </div>
       </section>
